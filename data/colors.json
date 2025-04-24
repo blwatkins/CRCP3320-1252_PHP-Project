@@ -3,5 +3,8 @@
   "blue": "#0000FF",
   "yellow": "#FFFF00",
   "green": "#00FF00",
-  "magenta": "#FF00FF"
+  "magenta": "#FF00FF",
+  "black": "#000000",
+  "<p>this is one p element</p><p>this is another</p>": "still not a color",
+  "<script>alert('hello there!');</script>": "still not a color"
 }
