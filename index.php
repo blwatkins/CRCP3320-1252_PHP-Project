@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<?php
+function buildColorCard($backgroundColor) {
+echo '<div class="card m-2" style="width: 15rem;">';
+echo '<div class="card-body">';
+echo '<div style="background:' . $backgroundColor . '; height: 15rem"></div>';
+echo '<button type="button" class="btn btn-danger mt-2">Delete</button>';
+echo '</div>';
+echo '</div>';
+}
+?>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -10,6 +20,19 @@
         <h1 class="text-center m-3">Colors</h1>
         <hr/>
         <div class="container">
+            <?php
+                $jsonString = file_get_contents('./data/colors.json');
+                $colors = array();
+
+                if ($jsonString) {
+                    $colors = json_decode($jsonString, true);
+                }
+
+
+                foreach ($colors as $name => $hex) {
+                    buildColorCard($hex);
+                }
+            ?>
             <div class="card m-2" style="width: 15rem;">
                 <div class="card-body">
                     <div style="background: red; height: 15rem"></div>
