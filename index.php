@@ -5,7 +5,10 @@ echo '<div class="card m-2" style="width: 15rem;">';
 echo '<div class="card-body">';
 echo '<div style="background:' . $backgroundColor . '; height: 15rem"></div>';
 echo '<p>' . $colorName . '</p>';
-echo '<button type="button" class="btn btn-danger mt-2">Delete</button>';
+echo '<form method="post" action="./sketch.php">';
+echo '<input type="text" name="delete-color-name" id="delete-color-name" value="' . $colorName . '" hidden/>';
+echo '<input type="submit" value="Delete" class="btn btn-danger mt-2"/>';
+echo '</form>';
 echo '</div>';
 echo '</div>';
 }
@@ -30,11 +33,14 @@ echo '</div>';
                 let hexPattern = /^#[0-9A-Z]{6}$/;
                 let match = hexPattern.test(inputValue);
                 let colorBlock = document.getElementById("form-color-block");
+                let submit = document.getElementById('form-submit');
 
                 if (match) {
                     colorBlock.style.background = inputValue;
+                    submit.toggleAttribute('disabled', false);
                 } else {
                     colorBlock.style.background = 'black';
+                    submit.toggleAttribute('disabled', true);
                 }
             }
         </script>
@@ -47,27 +53,27 @@ echo '</div>';
                 <div class="card m-2" style="width: 15rem;">
                     <div class="card-body">
                         <div id="form-color-block" style="background: #000000; height: 15rem"></div>
-                        <form id="new-color-form">
+                        <form id="new-color-form" method="get" action="./sketch.php">
                             <label for="color-hex">Color: </label>
-                            <input type="text" name="color-hex" id="color-hex" oninput="updateFormColor();"/>
+                            <input type="text" name="color-hex" id="color-hex" oninput="updateFormColor();" required/>
+                            <br/>
+                            <label for="color-name">Color Name: </label>
+                            <input type="text" name="color-name" id="color-name" required/>
+                            <br/>
+                            <input type="submit" class="btn btn-primary mt-2" id="form-submit" disabled/>
                         </form>
                     </div>
                 </div>
         </div>
         <div class="container">
             <?php
-                $jsonString = file_get_contents('./data/colors.json');
-                $colors = array();
-
-                if ($jsonString) {
-                    $colors = json_decode($jsonString, true);
-                }
+                require_once './utils.php';
+                $colors = readColorData();
 
                 foreach ($colors as $name => $hex) {
                     $hexColor = htmlentities($hex);
-                    $match = preg_match("/^#[0-9A-Z]{6}$/", $hexColor);
 
-                    if ($match === 1) {
+                    if (isHexColor($hexColor)) {
                         buildColorCard(htmlentities($hex), htmlentities($name));
                     }
                 }

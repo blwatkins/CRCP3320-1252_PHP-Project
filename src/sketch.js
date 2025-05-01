@@ -31,8 +31,17 @@ function buildColorChoices() {
     let hexCodes = Object.values(colorData);
 
     colorChoices = hexCodes.map((hex) => {
-        let c = color(hex);
-        c.setAlpha(100);
-        return c;
+        let hexPattern = /^#[0-9A-Z]{6}$/;
+        let match = hexPattern.test(hex);
+
+        if (match) {
+            let c = color(hex);
+            c.setAlpha(Math.floor(random(100, 255)));
+            return c;
+        } else {
+            return undefined;
+        }
     });
+
+    colorChoices = colorChoices.filter((hex) => (hex !== undefined));
 }
